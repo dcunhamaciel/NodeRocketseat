@@ -72,6 +72,14 @@ app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
     response.status(201).json(customer);
 });
 
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {  
+    const { customer } = request;
+
+    customers.splice(customer, 1);
+
+    response.status(204).send();
+});
+
 app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
     const { customer } = request;
 
@@ -128,6 +136,14 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     customer.statement.push(statementOperation);
 
     response.status(200).send();
+});
+
+app.get("/balance", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    const balance = getBalance(customer.statement);
+
+    response.status(200).json({ "balance": balance });
 });
 
 app.listen(3333);
